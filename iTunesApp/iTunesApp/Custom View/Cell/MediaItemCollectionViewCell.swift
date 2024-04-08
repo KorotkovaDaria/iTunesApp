@@ -32,7 +32,9 @@ class MediaItemCollectionViewCell: UICollectionViewCell {
         }
         trackNameLabel.text = mediaItem.trackName
         collectionPriceLabel.text = String(mediaItem.collectionPrice ?? 0.0) + "$"
-        mainImageView.downloadImage(from: mediaItem.artworkUrl100!)
+        if let imageUrl = mediaItem.artworkUrl100 {
+            mainImageView.downloadImage(from: imageUrl)
+        }
     }
     //MARK: - configure label
     private func configureLabel() {

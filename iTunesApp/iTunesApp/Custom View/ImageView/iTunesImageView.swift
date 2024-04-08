@@ -31,11 +31,12 @@ class iTunesImageView: UIImageView {
     
     func downloadImage(from urlString: String) {
         let cacheKey = NSString(string: urlString)
+        let hdURLString = urlString.replacingOccurrences(of: "100", with: "1000")
         if let image = cache.object(forKey: cacheKey) {
             self.image = image
             return
         }
-        guard let url = URL(string: urlString) else { return }
+        guard let url = URL(string: hdURLString) else { return }
         
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
             guard let self = self else { return }

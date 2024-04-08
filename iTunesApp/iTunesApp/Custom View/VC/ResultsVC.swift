@@ -15,7 +15,7 @@ class ResultsVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
-        view.backgroundColor = .clear
+        view.backgroundColor = UIColor(named: Resources.Colors.blue)
     }
     
     func configureTableView() {
@@ -37,7 +37,6 @@ class ResultsVC: UIViewController {
             searchSuggestions = suggestions
             tableView.reloadData()
         }
-
 }
 
 extension ResultsVC: UITableViewDelegate, UITableViewDataSource {
@@ -47,8 +46,21 @@ extension ResultsVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        let arrowImage = UIImage(systemName: "arrow.up.backward")
+        let arrowImageView = UIImageView(image: arrowImage)
+        arrowImageView.tintColor = UIColor(named: Resources.Colors.blue)
         cell.textLabel?.text = searchSuggestions[indexPath.row]
         cell.backgroundColor = UIColor(named: Resources.Colors.seaBlue)
+        cell.accessoryView = arrowImageView
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedSuggestion = searchSuggestions[indexPath.row]
+        if let searchVC = presentingViewController as? SearchViewController {
+            searchVC.searchController.searchBar.text = selectedSuggestion
+            searchVC.featchMediaItem(term: selectedSuggestion)
+        }
+        dismiss(animated: true, completion: nil)
     }
 }

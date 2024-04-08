@@ -57,9 +57,7 @@ class AlertVC: UIViewController {
         titleLabel.text          = alertTitle ?? "Something went wrong"
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        
-        
+
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: paddin),
             titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: paddin),
@@ -91,7 +89,6 @@ class AlertVC: UIViewController {
         messageLabel.numberOfLines = 4
         messageLabel.textAlignment = .center
         messageLabel.translatesAutoresizingMaskIntoConstraints = false
-        
         
         NSLayoutConstraint.activate([
             messageLabel.topAnchor.constraint(equalTo: titleLabel.topAnchor, constant: 8),

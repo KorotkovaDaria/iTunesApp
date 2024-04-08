@@ -27,7 +27,6 @@ class SearchViewController: UIViewController {
         configureDataSourse()
         loadSearchTerms()
     }
-    
     //MARK: - configure search view controller
     func configureSearchViewController() {
         view.backgroundColor = UIColor(named: Resources.Colors.blue)
@@ -148,7 +147,6 @@ extension SearchViewController: UISearchResultsUpdating, UISearchBarDelegate {
             if previouslyEnteredSearchTerms.count > 5 {
                 previouslyEnteredSearchTerms.removeLast()
             }
-            print(previouslyEnteredSearchTerms)
             saveSearchTerms()
             (searchController.searchResultsController as? ResultsVC)?.updateSearchSuggestions(with: previouslyEnteredSearchTerms)
             searchController.dismiss(animated: true)
@@ -159,9 +157,7 @@ extension SearchViewController: UISearchResultsUpdating, UISearchBarDelegate {
             searchResults.removeAll()
             updateData(on: [])
         }
-        
     }
-
 
 extension SearchViewController {
     func saveSearchTerms() {

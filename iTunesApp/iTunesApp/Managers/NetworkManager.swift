@@ -14,7 +14,6 @@ class NetworkManager {
     func getMediaSearchResult(term: String, completed: @escaping (Result<MediaSearchResult, iTunseError>) -> Void) {
         let searchString = term.replacingOccurrences(of: " ", with: "+")
         let endpoint = "\(baseURL)\(searchString)"
-        print(endpoint)
         
         guard let url = URL(string: endpoint) else {
             completed(.failure(.invalidURL))

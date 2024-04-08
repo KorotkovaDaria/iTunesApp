@@ -56,9 +56,10 @@ extension UIViewController {
         view.addSubview(emptyStateView)
     }
     
-    func presentSafariVC(with url: URL) {
-        let safariVC = SFSafariViewController(url: url)
-        safariVC.preferredControlTintColor = .systemGreen
+    func presentSafariVC(with url: String) {
+        guard let urlString = URL(string: url) else { return }
+        let safariVC = SFSafariViewController(url: urlString)
+        safariVC.preferredControlTintColor = UIColor(named: Resources.Colors.seaBlue)
         present(safariVC, animated: true)
     }
 }
