@@ -49,6 +49,7 @@ extension ResultsVC: UITableViewDelegate, UITableViewDataSource {
         let arrowImage = UIImage(systemName: "arrow.up.backward")
         let arrowImageView = UIImageView(image: arrowImage)
         arrowImageView.tintColor = UIColor(named: Resources.Colors.blue)
+        cell.selectionStyle = .none
         cell.textLabel?.text = searchSuggestions[indexPath.row]
         cell.backgroundColor = UIColor(named: Resources.Colors.seaBlue)
         cell.accessoryView = arrowImageView

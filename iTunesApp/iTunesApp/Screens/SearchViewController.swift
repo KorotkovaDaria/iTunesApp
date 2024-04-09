@@ -11,14 +11,14 @@ import UIKit
 class SearchViewController: UIViewController {
     //MARK: - enum
     enum Section { case main }
-    //MARK: - property
+    // MARK: - Properties
     let searchController = UISearchController(searchResultsController: ResultsVC())
     var searchResults: [MediaResult] = []
     var previouslyEnteredSearchTerms: [String] = []
     var collectionView: UICollectionView!
     var dataSourse: UICollectionViewDiffableDataSource<Section, MediaResult>!
     
-    //MARK: - live cycle
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureSearchController()
@@ -27,36 +27,21 @@ class SearchViewController: UIViewController {
         configureDataSourse()
         loadSearchTerms()
     }
+
     //MARK: - configure search view controller
     func configureSearchViewController() {
         view.backgroundColor = UIColor(named: Resources.Colors.blue)
     }
-    
     //MARK: - configure collection view controller
     func configureCollectionView() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createTwoColumnFlowLayout())
+        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: UIHelper.createTwoColumnFlowLayout(in: view))
         collectionView.backgroundColor = UIColor(named: Resources.Colors.blue)
         collectionView.register(MediaItemCollectionViewCell.self, forCellWithReuseIdentifier: MediaItemCollectionViewCell.reuseID)
         collectionView.dataSource = self
         collectionView.delegate = self
         view.addSubview(collectionView)
-    }
-    
-    func createTwoColumnFlowLayout() -> UICollectionViewFlowLayout {
-        let width                       = view.bounds.width
-        let padding: CGFloat            = 2
-        let minimumItemSpacing: CGFloat = 10
-        let numberOfColumns             = 2
-        let availableWidth              = width - (padding * CGFloat(numberOfColumns + 1)) - (minimumItemSpacing * CGFloat(numberOfColumns - 1))
-        let itemWidth                   = availableWidth / CGFloat(numberOfColumns)
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.sectionInset = UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
-        flowLayout.minimumInteritemSpacing = minimumItemSpacing
-        flowLayout.minimumLineSpacing = minimumItemSpacing
-        flowLayout.itemSize = CGSize(width: itemWidth, height: itemWidth + 30)
-        return flowLayout
     }
     
     //MARK: - configure search controller
@@ -65,7 +50,8 @@ class SearchViewController: UIViewController {
         searchController.searchBar.delegate = self
         searchController.searchBar.placeholder = "Search"
         searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.showsSearchResultsButton = true
+        searchController.searchBar.showsSearchResultsButton = false
+        //navigationItem.hidesSearchBarWhenScrolling = false
         navigationItem.searchController = searchController
         navigationItem.searchController?.searchBar.tintColor = UIColor(named: Resources.Colors.seaBlue)
     }
@@ -83,10 +69,10 @@ class SearchViewController: UIViewController {
                     self.collectionView.reloadData()
                 }
                 if self.searchResults.isEmpty {
-                    self.presentAlertOnMainTread(title: "Something went wrong", message: "There is no data for this request ", buttonTitle: "OK")
+                    self.presentAlertOnMainTread(title: "You are so unique!", message: "Unfortunately, there is nothing matching your request. We will try to take this into account next time", buttonTitle: "OK")
                 }
             case .failure(let error):
-                self.presentAlertOnMainTread(title: "Something went wrong", message: error.rawValue, buttonTitle: "OK")
+                self.presentAlertOnMainTread(title: "You wrote something wrong!", message: "Please make sure you make your request in English and write the existing text.\n\(error.rawValue)", buttonTitle: "OK")
             }
         }
     }
@@ -107,7 +93,7 @@ class SearchViewController: UIViewController {
         
     }
 }
-    //MARK: - extension collection view controller
+//MARK: - extension collection view controller
 extension SearchViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return searchResults.count
@@ -124,6 +110,7 @@ extension SearchViewController: UICollectionViewDataSource, UICollectionViewDele
         let selectedMediaItem = searchResults[indexPath.item]
         let destVC = DetailsVC()
         destVC.selectedMediaItem = selectedMediaItem
+        destVC.title = selectedMediaItem.trackName
         let navController = UINavigationController(rootViewController: destVC)
         navController.modalPresentationStyle = .fullScreen
         present(navController, animated: true)
@@ -141,32 +128,31 @@ extension SearchViewController: UISearchResultsUpdating, UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let searchText = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines), !searchText.isEmpty {
             featchMediaItem(term: searchText)
-            previouslyEnteredSearchTerms.insert(searchText, at: 0)
-            previouslyEnteredSearchTerms = Array(Set(previouslyEnteredSearchTerms))
-            previouslyEnteredSearchTerms = previouslyEnteredSearchTerms.filter { !$0.isEmpty }
-            if previouslyEnteredSearchTerms.count > 5 {
-                previouslyEnteredSearchTerms.removeLast()
+            if !previouslyEnteredSearchTerms.contains(where: { $0.lowercased() == searchText.lowercased() }) {
+                previouslyEnteredSearchTerms.insert(searchText, at: 0)
+                if previouslyEnteredSearchTerms.count > 5 {
+                    previouslyEnteredSearchTerms.removeLast()
+                }
+                saveSearchTerms()
             }
-            saveSearchTerms()
-            (searchController.searchResultsController as? ResultsVC)?.updateSearchSuggestions(with: previouslyEnteredSearchTerms)
+            
             searchController.dismiss(animated: true)
+            
         }
     }
-        
-        func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-            searchResults.removeAll()
-            updateData(on: [])
-        }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchResults.removeAll()
+        updateData(on: [])
     }
+}
 
 extension SearchViewController {
     func saveSearchTerms() {
-        UserDefaults.standard.set(previouslyEnteredSearchTerms, forKey: "PreviouslyEnteredSearchTerms")
+        UserDefaultsManager.shared.saveSearchTerms(previouslyEnteredSearchTerms)
     }
     
     func loadSearchTerms() {
-        if let savedSearchTerms = UserDefaults.standard.array(forKey: "PreviouslyEnteredSearchTerms") as? [String] {
-            previouslyEnteredSearchTerms = savedSearchTerms
-        }
+        previouslyEnteredSearchTerms = UserDefaultsManager.shared.loadSearchTerms()
     }
 }

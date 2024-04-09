@@ -10,7 +10,7 @@ import UIKit
 class DependencyManager {
     static func createSearchNC() -> UIViewController {
         let searchVC = SearchViewController()
-        //searchVC.title = "SEARCH"
+        searchVC.title = "SEARCH"
         return searchVC
     }
 
@@ -22,7 +22,7 @@ class DependencyManager {
             let navigationBarAppearance = UINavigationBarAppearance()
             navigationBarAppearance.configureWithOpaqueBackground()
             navigationBarAppearance.titleTextAttributes = [
-                NSAttributedString.Key.foregroundColor : UIColor(named: Resources.Colors.white)!
+                NSAttributedString.Key.foregroundColor : UIColor(named: Resources.Colors.seaBlue)!
             ]
             navigationBarAppearance.backgroundColor = UIColor(named: Resources.Colors.blueGrey)
             UINavigationBar.appearance().standardAppearance = navigationBarAppearance

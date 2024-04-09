@@ -6,7 +6,12 @@
 //
 
 import UIKit
-class NetworkManager {
+
+protocol NetworkManagerProtocol {
+    func getMediaSearchResult(term: String, completed: @escaping (Result<MediaSearchResult, iTunseError>) -> Void)
+}
+
+class NetworkManager: NetworkManagerProtocol {
     static let shared = NetworkManager()
     let baseURL = "https://itunes.apple.com/search?entity=movie,podcast&lang=en_us&term="
     let cache = NSCache<NSString, UIImage>()

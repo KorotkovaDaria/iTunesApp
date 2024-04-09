@@ -50,12 +50,6 @@ extension UIViewController {
         }
     }
     
-    func showEmptyStateView(with message: String, in view: UIView) {
-        let emptyStateView = EmptyView(message: message)
-        emptyStateView.frame = view.bounds
-        view.addSubview(emptyStateView)
-    }
-    
     func presentSafariVC(with url: String) {
         guard let urlString = URL(string: url) else { return }
         let safariVC = SFSafariViewController(url: urlString)

@@ -16,19 +16,32 @@ struct MediaSearchResult: Codable, Hashable {
 struct MediaResult: Codable, Hashable {
     let wrapperType: String
     let kind: String?
-    let trackId: Int?
+    
     let artistName: String
-    let trackName, trackCensoredName: String?
-    let trackViewUrl: String?
     let artistViewUrl: String?
+    let artistId: Int?
+    
+    let collectionName: String?
+    let collectionCensoredName: String?
+    let collectionId: Int?
     let collectionArtistViewUrl: String?
+    
+    let trackId: Int?
+    let trackName: String?
+    let trackCensoredName: String?
+    let trackViewUrl: String?
+    
+    let artworkUrl60: String?
+    let artworkUrl100: String?
+    
     let previewUrl: String?
-    let artworkUrl60, artworkUrl100: String?
+    
     let collectionPrice: Double?
+    
     let trackTimeMillis: Int?
-    let shortDescription, longDescription: String?
-    let artistId, collectionId: Int?
-    let collectionName, collectionCensoredName: String?
-    let trackCount: Int?
+    let releaseDate: String?
+    
+    let shortDescription: String?
+    let longDescription: String?
     let description: String?
 }

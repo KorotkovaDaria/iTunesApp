@@ -10,8 +10,8 @@ import UIKit
 class AlertVC: UIViewController {
     
     let containerView = AlertContainerView()
-    let titleLabel    = UILabel()
-    let messageLabel  = UILabel()
+    let titleLabel    = iTunesLable(textAlignment: .center, color: Resources.Colors.black, numberOfLines: 3)
+    let messageLabel  = iTunesLable(textAlignment: .center, color: Resources.Colors.black, numberOfLines: 0)
     let actionButton  = UIButton()
     
     var alertTitle:  String?
@@ -54,9 +54,8 @@ class AlertVC: UIViewController {
     
     func configureTitlelabel() {
         containerView.addSubview(titleLabel)
-        titleLabel.text          = alertTitle ?? "Something went wrong"
-        titleLabel.textAlignment = .center
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = alertTitle ?? "Something went wrong"
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 16)
 
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: paddin),
@@ -85,10 +84,8 @@ class AlertVC: UIViewController {
     
     func configureMessageTitle() {
         containerView.addSubview(messageLabel)
-        messageLabel.text          = message ?? "Unable tot complere request"
-        messageLabel.numberOfLines = 4
-        messageLabel.textAlignment = .center
-        messageLabel.translatesAutoresizingMaskIntoConstraints = false
+        messageLabel.text = message ?? "Unable tot complere request"
+        messageLabel.font = UIFont.systemFont(ofSize: 12)
         
         NSLayoutConstraint.activate([
             messageLabel.topAnchor.constraint(equalTo: titleLabel.topAnchor, constant: 8),

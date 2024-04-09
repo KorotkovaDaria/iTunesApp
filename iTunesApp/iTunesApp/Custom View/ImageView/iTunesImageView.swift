@@ -9,7 +9,7 @@ import UIKit
 
 class iTunesImageView: UIImageView {
 
-    //let plaseholderImage = UIImage(named: Resources.NameImage.doesntHavePhoto)
+    let plaseholderImage = UIImage(named: Resources.ImageTitle.plaseholderImage)
     let cache            = NetworkManager.shared.cache
     
     override init(frame: CGRect) {
@@ -25,7 +25,7 @@ class iTunesImageView: UIImageView {
         layer.cornerRadius = 10
         clipsToBounds      = true
         contentMode        = .scaleAspectFill
-        //image            = plaseholderImage
+        image              = plaseholderImage
         translatesAutoresizingMaskIntoConstraints = false
     }
     

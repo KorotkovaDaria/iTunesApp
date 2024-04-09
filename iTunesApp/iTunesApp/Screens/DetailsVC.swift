@@ -12,6 +12,7 @@ class DetailsVC: UIViewController {
     var selectedMediaItem: MediaResult?
     let scrollView = UIScrollView()
     let stackView = UIStackView()
+    var kindType = ""
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -25,7 +26,7 @@ class DetailsVC: UIViewController {
     
     // MARK: - UI Setup
     private func setupUI() {
-        view.backgroundColor = UIColor(named: "blue")
+        view.backgroundColor = UIColor(named: Resources.Colors.blue)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
         
@@ -58,12 +59,16 @@ class DetailsVC: UIViewController {
         configureTitleLabel(with: mediaItem)
         configureArtistLabel(with: mediaItem)
         configureTypeLabel(with: mediaItem)
+        configureDateLabel(with: mediaItem)
+        configureTimeLabel(with: mediaItem)
         configureCollectionPriceLabel(with: mediaItem)
+        configureCollectionNameLabel(with: mediaItem)
         configureTrackButton(with: mediaItem)
         configureArtistMovieButton(with: mediaItem)
-        //configureArtistPodcastButton(with: mediaItem)
+        configureArtistPodcastButton(with: mediaItem)
+        configureDescriptionTextLabel(with: mediaItem)
         configureDescriptionLabel(with: mediaItem)
-        configureCollectionNameLabel(with: mediaItem)
+        configureDescriptionForPodcastLabel(with: mediaItem)
         
     }
     
@@ -75,21 +80,20 @@ class DetailsVC: UIViewController {
         mainImage.translatesAutoresizingMaskIntoConstraints = false
         mainImage.downloadImage(from: imageUrl)
         stackView.addArrangedSubview(mainImage)
-        mainImage.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        mainImage.heightAnchor.constraint(equalToConstant: 400).isActive = true
     }
     
     private func configureTitleLabel(with mediaItem: MediaResult) {
         guard let trackName = mediaItem.trackName else { return }
-        let titleLabel = UILabel()
+        let titleLabel = iTunesLable(textAlignment: .left, color: Resources.Colors.black, numberOfLines: 0)
         titleLabel.text = trackName
-        titleLabel.numberOfLines = 0
         titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
         stackView.addArrangedSubview(titleLabel)
     }
     
     private func configureArtistLabel(with mediaItem: MediaResult) {
         let artistName = mediaItem.artistName 
-        let artistLabel = UILabel()
+        let artistLabel = iTunesLable(textAlignment: .left, color: Resources.Colors.black, numberOfLines: 0)
         artistLabel.text = "By \(artistName)"
         stackView.addArrangedSubview(artistLabel)
     }
@@ -99,26 +103,36 @@ class DetailsVC: UIViewController {
         if kind == "feature-movie" {
             kind = "movie"
         }
-        let typeLabel = UILabel()
+        kindType = kind
+        let typeLabel = iTunesLable(textAlignment: .left, color: Resources.Colors.black, numberOfLines: 0)
         typeLabel.text = "Type: \(kind)"
         stackView.addArrangedSubview(typeLabel)
+    }
+    private func configureDateLabel(with mediaItem: MediaResult) {
+        guard let date = mediaItem.releaseDate else { return }
+        let dateType = iTunesLable(textAlignment: .left, color: Resources.Colors.black, numberOfLines: 0)
+        dateType.text = "Date release: \(date.convertToFormattedString())"
+        stackView.addArrangedSubview(dateType)
+    }
+    
+    private func configureTimeLabel(with mediaItem: MediaResult) {
+        guard let time = mediaItem.trackTimeMillis  else { return }
+        let hoursTime = TimeFormatter.timeFormater(time: time)
+        let timeType = iTunesLable(textAlignment: .left, color: Resources.Colors.black, numberOfLines: 0)
+        timeType.text = "Time: \(hoursTime)"
+        stackView.addArrangedSubview(timeType)
     }
     
     private func configureCollectionPriceLabel(with mediaItem: MediaResult) {
         guard let collectionPrice = mediaItem.collectionPrice else { return }
-        let collectionPriceLabel = UILabel()
+        let collectionPriceLabel = iTunesLable(textAlignment: .left, color: Resources.Colors.black, numberOfLines: 0)
         collectionPriceLabel.text = "Collection price: \(collectionPrice)$"
-        collectionPriceLabel.numberOfLines = 0
         stackView.addArrangedSubview(collectionPriceLabel)
     }
     
     private func configureTrackButton(with mediaItem: MediaResult) {
         guard mediaItem.trackViewUrl != nil else { return }
-        let trackButton = UIButton()
-        trackButton.setTitle("More information about this work", for: .normal)
-        trackButton.setTitleColor(.white, for: .normal)
-        trackButton.backgroundColor = UIColor(named: "sand")
-        trackButton.layer.cornerRadius = 5
+        let trackButton = iTunesButton(backgroundColor: Resources.Colors.seaBlue, title: "Click to view this \(kindType)" , titleColor: Resources.Colors.blue)
         trackButton.addTarget(self, action: #selector(openTrackURL), for: .touchUpInside)
         trackButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         stackView.addArrangedSubview(trackButton)
@@ -126,40 +140,46 @@ class DetailsVC: UIViewController {
     
     private func configureArtistMovieButton(with mediaItem: MediaResult) {
         guard mediaItem.collectionArtistViewUrl != nil else { return }
-        let artistMovieButton = UIButton()
-        artistMovieButton.setTitle("More information about this artist", for: .normal)
-        artistMovieButton.setTitleColor(.white, for: .normal)
-        artistMovieButton.backgroundColor = UIColor(named: "sand")
-        artistMovieButton.layer.cornerRadius = 5
+        let artistMovieButton = iTunesButton(backgroundColor: Resources.Colors.seaBlue, title: "Click to find out more information", titleColor: Resources.Colors.blue)
         artistMovieButton.addTarget(self, action: #selector(openArtistMovieURL), for: .touchUpInside)
         artistMovieButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         stackView.addArrangedSubview(artistMovieButton)
     }
     private func configureArtistPodcastButton(with mediaItem: MediaResult) {
         guard mediaItem.kind == "podcast", mediaItem.artistViewUrl != nil else { return }
-        let artistPodcastButton = UIButton()
-        artistPodcastButton.setTitle("More information about this artist", for: .normal)
-        artistPodcastButton.setTitleColor(.white, for: .normal)
-        artistPodcastButton.backgroundColor = UIColor(named: "sand")
-        artistPodcastButton.layer.cornerRadius = 5
+        let artistPodcastButton = iTunesButton(backgroundColor: Resources.Colors.seaBlue, title: "Click to find out more information", titleColor: Resources.Colors.blue)
         artistPodcastButton.addTarget(self, action: #selector(openArtistPodcastURL), for: .touchUpInside)
         artistPodcastButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         stackView.addArrangedSubview(artistPodcastButton)
     }
     
+    private func configureDescriptionTextLabel(with mediaItem: MediaResult) {
+        let descriptionTextLabel = iTunesLable(textAlignment: .left, color: Resources.Colors.black, numberOfLines: 0)
+        if mediaItem.description == nil && mediaItem.longDescription == nil {
+            return
+        }
+        descriptionTextLabel.text = "Description"
+        descriptionTextLabel.font =  UIFont.boldSystemFont(ofSize: 20)
+        stackView.addArrangedSubview(descriptionTextLabel)
+    }
+    
     private func configureDescriptionLabel(with mediaItem: MediaResult) {
         guard let description = mediaItem.longDescription else { return }
-        let descriptionLabel = UILabel()
+        let descriptionLabel = iTunesLable(textAlignment: .left, color: Resources.Colors.black, numberOfLines: 0)
         descriptionLabel.text = description
-        descriptionLabel.numberOfLines = 0
         stackView.addArrangedSubview(descriptionLabel)
+    }
+    private func configureDescriptionForPodcastLabel(with mediaItem: MediaResult) {
+        guard mediaItem.kind == "podcast", let description = mediaItem.description else { return }
+        let descriptionPodcast = iTunesLable(textAlignment: .left, color: Resources.Colors.black, numberOfLines: 0)
+        descriptionPodcast.text = description
+        stackView.addArrangedSubview(descriptionPodcast)
     }
     
     private func configureCollectionNameLabel(with mediaItem: MediaResult) {
         guard mediaItem.kind == "podcast", let collectionName = mediaItem.collectionName else { return }
-        let collectionNameLabel = UILabel()
+        let collectionNameLabel = iTunesLable(textAlignment: .left, color: Resources.Colors.black, numberOfLines: 0)
         collectionNameLabel.text = "Collection name: \(collectionName)"
-        collectionNameLabel.numberOfLines = 0
         stackView.addArrangedSubview(collectionNameLabel)
     }
     

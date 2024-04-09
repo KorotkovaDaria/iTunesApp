@@ -11,9 +11,9 @@ class MediaItemCollectionViewCell: UICollectionViewCell {
     //MARK: - property
     static var reuseID = "MediaItemCell"
     let mainImageView = iTunesImageView(frame: .zero)
-    let kindTypeLabel = UILabel()
-    let trackNameLabel = UILabel()
-    let collectionPriceLabel = UILabel()
+    let kindTypeLabel = iTunesLable(textAlignment: .left, color: Resources.Colors.greyText, numberOfLines: 1)
+    let trackNameLabel = iTunesLable(textAlignment: .left, color: Resources.Colors.seaBlue, numberOfLines: 1)
+    let collectionPriceLabel = iTunesLable(textAlignment: .left, color: Resources.Colors.seaBlue, numberOfLines: 1)
     //MARK: - init
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -41,14 +41,6 @@ class MediaItemCollectionViewCell: UICollectionViewCell {
         kindTypeLabel.font = .systemFont(ofSize: 10)
         trackNameLabel.font = .systemFont(ofSize: 10)
         collectionPriceLabel.font = .systemFont(ofSize: 10)
-        
-        kindTypeLabel.textColor = UIColor(named: Resources.Colors.greyText)
-        collectionPriceLabel.textColor = UIColor(named: Resources.Colors.seaBlue)
-        trackNameLabel.textColor = UIColor(named: Resources.Colors.seaBlue)
-        
-        kindTypeLabel.numberOfLines = 1
-        trackNameLabel.numberOfLines = 1
-        collectionPriceLabel.numberOfLines = 1
     }
     //MARK: - configure
     private func configure() {
@@ -56,10 +48,6 @@ class MediaItemCollectionViewCell: UICollectionViewCell {
         addSubview(kindTypeLabel)
         addSubview(trackNameLabel)
         addSubview(collectionPriceLabel)
-        
-        kindTypeLabel.translatesAutoresizingMaskIntoConstraints = false
-        trackNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        collectionPriceLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let padding: CGFloat = 16
         let paddingLabel: CGFloat = 4

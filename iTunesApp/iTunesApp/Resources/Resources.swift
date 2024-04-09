@@ -17,6 +17,9 @@ enum Resources {
         static var black    = "black"
         static var blueGrey = "blueGrey"
         static var greyText = "greyText"
-        
+    }
+    
+    enum ImageTitle {
+        static var plaseholderImage  = "plaseholderImage"
     }
 }
