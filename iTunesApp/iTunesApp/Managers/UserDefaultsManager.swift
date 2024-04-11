@@ -9,9 +9,9 @@ import Foundation
 
 struct UserDefaultsManager {
     
-    static let shared = UserDefaultsManager()
+    static let shared        = UserDefaultsManager()
     private let userDefaults = UserDefaults.standard
-    let key = "PreviouslyEnteredSearchTerms"
+    let key                  = "PreviouslyEnteredSearchTerms"
     
     private init() {}
     

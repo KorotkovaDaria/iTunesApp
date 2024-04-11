@@ -12,8 +12,8 @@ class SearchViewController: UIViewController {
     //MARK: - enum
     enum Section { case main }
     // MARK: - Properties
-    let searchController = UISearchController(searchResultsController: ResultsVC())
-    var searchResults: [MediaResult] = []
+    let searchController                       = UISearchController(searchResultsController: ResultsVC())
+    var searchResults: [MediaResult]           = []
     var previouslyEnteredSearchTerms: [String] = []
     var collectionView: UICollectionView!
     var dataSourse: UICollectionViewDiffableDataSource<Section, MediaResult>!
@@ -30,30 +30,34 @@ class SearchViewController: UIViewController {
 
     //MARK: - configure search view controller
     func configureSearchViewController() {
-        view.backgroundColor = UIColor(named: Resources.Colors.blue)
+        view.backgroundColor = Resources.Colors.blue
     }
     //MARK: - configure collection view controller
     func configureCollectionView() {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
+        let layout                     = UICollectionViewFlowLayout()
+        layout.scrollDirection         = .vertical
+        
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: UIHelper.createTwoColumnFlowLayout(in: view))
-        collectionView.backgroundColor = UIColor(named: Resources.Colors.blue)
         collectionView.register(MediaItemCollectionViewCell.self, forCellWithReuseIdentifier: MediaItemCollectionViewCell.reuseID)
-        collectionView.dataSource = self
-        collectionView.delegate = self
+        
+        collectionView.backgroundColor = Resources.Colors.blue
+        collectionView.dataSource      = self
+        collectionView.delegate        = self
+        
+        
         view.addSubview(collectionView)
     }
     
     //MARK: - configure search controller
     func configureSearchController() {
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.delegate = self
-        searchController.searchBar.placeholder = "Search"
+        searchController.searchResultsUpdater                 = self
+        searchController.searchBar.delegate                   = self
+        searchController.searchBar.placeholder                = "Search"
         searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.showsSearchResultsButton = false
-        //navigationItem.hidesSearchBarWhenScrolling = false
-        navigationItem.searchController = searchController
-        navigationItem.searchController?.searchBar.tintColor = UIColor(named: Resources.Colors.seaBlue)
+        searchController.searchBar.showsSearchResultsButton   = false
+        navigationItem.hidesSearchBarWhenScrolling            = false
+        navigationItem.searchController                       = searchController
+        navigationItem.searchController?.searchBar.tintColor  = Resources.Colors.seaBlue
     }
     //MARK: - data
     func featchMediaItem(term: String) {
@@ -107,17 +111,18 @@ extension SearchViewController: UICollectionViewDataSource, UICollectionViewDele
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let selectedMediaItem = searchResults[indexPath.item]
-        let destVC = DetailsVC()
-        destVC.selectedMediaItem = selectedMediaItem
-        destVC.title = selectedMediaItem.trackName
-        let navController = UINavigationController(rootViewController: destVC)
+        let selectedMediaItem                = searchResults[indexPath.item]
+        let destVC                           = DetailsVC()
+        destVC.selectedMediaItem             = selectedMediaItem
+        destVC.title                         = selectedMediaItem.trackName
+        let navController                    = UINavigationController(rootViewController: destVC)
         navController.modalPresentationStyle = .fullScreen
         present(navController, animated: true)
     }
 }
 //MARK: - extension search controller
 extension SearchViewController: UISearchResultsUpdating, UISearchBarDelegate {
+    
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text else { return }
         let filteredTerms = previouslyEnteredSearchTerms.filter { $0.lowercased().contains(searchText.lowercased()) }
@@ -127,17 +132,21 @@ extension SearchViewController: UISearchResultsUpdating, UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let searchText = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines), !searchText.isEmpty {
-            featchMediaItem(term: searchText)
-            if !previouslyEnteredSearchTerms.contains(where: { $0.lowercased() == searchText.lowercased() }) {
-                previouslyEnteredSearchTerms.insert(searchText, at: 0)
-                if previouslyEnteredSearchTerms.count > 5 {
-                    previouslyEnteredSearchTerms.removeLast()
+            let isEnglish = searchText.range(of: "\\P{Latin}", options: .regularExpression) == nil
+            
+            if isEnglish {
+                featchMediaItem(term: searchText)
+                if !previouslyEnteredSearchTerms.contains(where: { $0.lowercased() == searchText.lowercased() }) {
+                    previouslyEnteredSearchTerms.insert(searchText, at: 0)
+                    if previouslyEnteredSearchTerms.count > 5 {
+                        previouslyEnteredSearchTerms.removeLast()
+                    }
+                    saveSearchTerms()
                 }
-                saveSearchTerms()
+                searchController.dismiss(animated: true)
+            } else {
+                presentAlertOnMainTread(title: "Only English Language", message: "Please enter your search term in English.", buttonTitle: "OK")
             }
-            
-            searchController.dismiss(animated: true)
-            
         }
     }
     

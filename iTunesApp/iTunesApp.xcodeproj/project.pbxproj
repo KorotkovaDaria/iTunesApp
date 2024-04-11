@@ -10,13 +10,15 @@
 		4E0454162BC3CDA40055E962 /* ViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0454152BC3CDA40055E962 /* ViewController+Ext.swift */; };
 		4E0454182BC3D5D10055E962 /* AlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0454172BC3D5D10055E962 /* AlertVC.swift */; };
 		4E04541A2BC3D6460055E962 /* AlertContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0454192BC3D6460055E962 /* AlertContainerView.swift */; };
+		4E2F8BA22BC6734E001C01C6 /* Date + Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2F8BA12BC6734E001C01C6 /* Date + Ext.swift */; };
 		4E3488402BC322A60062A9DA /* DetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E34883F2BC322A60062A9DA /* DetailsVC.swift */; };
 		4E8876802BC5208100A068FE /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E88767F2BC5208100A068FE /* UserDefaultsManager.swift */; };
 		4E8876822BC5212900A068FE /* UIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8876812BC5212900A068FE /* UIHelper.swift */; };
-		4E8876852BC5228200A068FE /* iTunesLable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8876842BC5228200A068FE /* iTunesLable.swift */; };
+		4E8876852BC5228200A068FE /* iTunesLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8876842BC5228200A068FE /* iTunesLabel.swift */; };
 		4E8876882BC526D800A068FE /* iTunesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8876872BC526D800A068FE /* iTunesButton.swift */; };
-		4E88768D2BC5494600A068FE /* String + Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E88768C2BC5494600A068FE /* String + Ext.swift */; };
 		4E88768F2BC5573F00A068FE /* TimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E88768E2BC5573F00A068FE /* TimeFormatter.swift */; };
+		4E8ACA1C2BC8248600430D8F /* BestAlbumCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8ACA1B2BC8248600430D8F /* BestAlbumCell.swift */; };
+		4E8ACA1E2BC86E6C00430D8F /* ContentSizeTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8ACA1D2BC86E6C00430D8F /* ContentSizeTableView.swift */; };
 		4ED460042BC2785900A07ECD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED460032BC2785900A07ECD /* AppDelegate.swift */; };
 		4ED460062BC2785900A07ECD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED460052BC2785900A07ECD /* SceneDelegate.swift */; };
 		4ED4600D2BC2785A00A07ECD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4ED4600C2BC2785A00A07ECD /* Assets.xcassets */; };
@@ -35,13 +37,15 @@
 		4E0454152BC3CDA40055E962 /* ViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Ext.swift"; sourceTree = "<group>"; };
 		4E0454172BC3D5D10055E962 /* AlertVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertVC.swift; sourceTree = "<group>"; };
 		4E0454192BC3D6460055E962 /* AlertContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertContainerView.swift; sourceTree = "<group>"; };
+		4E2F8BA12BC6734E001C01C6 /* Date + Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date + Ext.swift"; sourceTree = "<group>"; };
 		4E34883F2BC322A60062A9DA /* DetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsVC.swift; sourceTree = "<group>"; };
 		4E88767F2BC5208100A068FE /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		4E8876812BC5212900A068FE /* UIHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIHelper.swift; sourceTree = "<group>"; };
-		4E8876842BC5228200A068FE /* iTunesLable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iTunesLable.swift; sourceTree = "<group>"; };
+		4E8876842BC5228200A068FE /* iTunesLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iTunesLabel.swift; sourceTree = "<group>"; };
 		4E8876872BC526D800A068FE /* iTunesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iTunesButton.swift; sourceTree = "<group>"; };
-		4E88768C2BC5494600A068FE /* String + Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String + Ext.swift"; sourceTree = "<group>"; };
 		4E88768E2BC5573F00A068FE /* TimeFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFormatter.swift; sourceTree = "<group>"; };
+		4E8ACA1B2BC8248600430D8F /* BestAlbumCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BestAlbumCell.swift; sourceTree = "<group>"; };
+		4E8ACA1D2BC86E6C00430D8F /* ContentSizeTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentSizeTableView.swift; sourceTree = "<group>"; };
 		4ED460002BC2785900A07ECD /* iTunesApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iTunesApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4ED460032BC2785900A07ECD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4ED460052BC2785900A07ECD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -81,6 +85,7 @@
 		4E04541E2BC3DDA30055E962 /* Custom View */ = {
 			isa = PBXGroup;
 			children = (
+				4E8ACA1F2BC871FE00430D8F /* TableView */,
 				4E8876862BC526B600A068FE /* Button */,
 				4E8876832BC5225600A068FE /* Label */,
 				4E0454222BC3DE070055E962 /* Views */,
@@ -95,6 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				4ED460252BC2C23900A07ECD /* MediaItemCollectionViewCell.swift */,
+				4E8ACA1B2BC8248600430D8F /* BestAlbumCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -127,7 +133,7 @@
 		4E8876832BC5225600A068FE /* Label */ = {
 			isa = PBXGroup;
 			children = (
-				4E8876842BC5228200A068FE /* iTunesLable.swift */,
+				4E8876842BC5228200A068FE /* iTunesLabel.swift */,
 			);
 			path = Label;
 			sourceTree = "<group>";
@@ -144,9 +150,26 @@
 			isa = PBXGroup;
 			children = (
 				4E0454152BC3CDA40055E962 /* ViewController+Ext.swift */,
-				4E88768C2BC5494600A068FE /* String + Ext.swift */,
+				4E2F8BA12BC6734E001C01C6 /* Date + Ext.swift */,
 			);
 			path = Ext;
+			sourceTree = "<group>";
+		};
+		4E8ACA1F2BC871FE00430D8F /* TableView */ = {
+			isa = PBXGroup;
+			children = (
+				4E8ACA1D2BC86E6C00430D8F /* ContentSizeTableView.swift */,
+			);
+			path = TableView;
+			sourceTree = "<group>";
+		};
+		4E8ACA202BC8721A00430D8F /* Formatter */ = {
+			isa = PBXGroup;
+			children = (
+				4E88768E2BC5573F00A068FE /* TimeFormatter.swift */,
+				4E8876812BC5212900A068FE /* UIHelper.swift */,
+			);
+			path = Formatter;
 			sourceTree = "<group>";
 		};
 		4ED45FF72BC2785800A07ECD = {
@@ -191,13 +214,12 @@
 		4ED460182BC2794F00A07ECD /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4E8ACA202BC8721A00430D8F /* Formatter */,
 				4E8876892BC5363C00A068FE /* Ext */,
 				4ED4601B2BC27D2500A07ECD /* Resources.swift */,
 				4ED4600C2BC2785A00A07ECD /* Assets.xcassets */,
 				4ED4600E2BC2785A00A07ECD /* LaunchScreen.storyboard */,
 				4ED460202BC2A6B900A07ECD /* iTunseError.swift */,
-				4E8876812BC5212900A068FE /* UIHelper.swift */,
-				4E88768E2BC5573F00A068FE /* TimeFormatter.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -291,23 +313,25 @@
 			files = (
 				4E0454162BC3CDA40055E962 /* ViewController+Ext.swift in Sources */,
 				4ED460042BC2785900A07ECD /* AppDelegate.swift in Sources */,
+				4E8ACA1E2BC86E6C00430D8F /* ContentSizeTableView.swift in Sources */,
 				4ED4601C2BC27D2500A07ECD /* Resources.swift in Sources */,
 				4E04541A2BC3D6460055E962 /* AlertContainerView.swift in Sources */,
 				4ED4601A2BC27C3700A07ECD /* SearchViewController.swift in Sources */,
 				4ED4602E2BC304BD00A07ECD /* ResultsVC.swift in Sources */,
-				4E8876852BC5228200A068FE /* iTunesLable.swift in Sources */,
-				4E88768D2BC5494600A068FE /* String + Ext.swift in Sources */,
+				4E8876852BC5228200A068FE /* iTunesLabel.swift in Sources */,
 				4E8876802BC5208100A068FE /* UserDefaultsManager.swift in Sources */,
 				4ED460242BC2A70800A07ECD /* NetworkManager.swift in Sources */,
 				4E8876882BC526D800A068FE /* iTunesButton.swift in Sources */,
 				4ED460062BC2785900A07ECD /* SceneDelegate.swift in Sources */,
 				4ED460282BC2C33A00A07ECD /* iTunesImageView.swift in Sources */,
 				4E88768F2BC5573F00A068FE /* TimeFormatter.swift in Sources */,
+				4E8ACA1C2BC8248600430D8F /* BestAlbumCell.swift in Sources */,
 				4ED460212BC2A6B900A07ECD /* iTunseError.swift in Sources */,
 				4E8876822BC5212900A068FE /* UIHelper.swift in Sources */,
 				4ED460262BC2C23900A07ECD /* MediaItemCollectionViewCell.swift in Sources */,
 				4ED4601F2BC2A11500A07ECD /* MediaSearchResult.swift in Sources */,
 				4E3488402BC322A60062A9DA /* DetailsVC.swift in Sources */,
+				4E2F8BA22BC6734E001C01C6 /* Date + Ext.swift in Sources */,
 				4E0454182BC3D5D10055E962 /* AlertVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

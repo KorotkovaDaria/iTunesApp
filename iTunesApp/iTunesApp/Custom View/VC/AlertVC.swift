@@ -10,8 +10,8 @@ import UIKit
 class AlertVC: UIViewController {
     
     let containerView = AlertContainerView()
-    let titleLabel    = iTunesLable(textAlignment: .center, color: Resources.Colors.black, numberOfLines: 3)
-    let messageLabel  = iTunesLable(textAlignment: .center, color: Resources.Colors.black, numberOfLines: 0)
+    let titleLabel    = iTunesLabel(textAlignment: .center, color: Resources.Colors.black, numberOfLines: 3)
+    let messageLabel  = iTunesLabel(textAlignment: .center, color: Resources.Colors.black, numberOfLines: 0)
     let actionButton  = UIButton()
     
     var alertTitle:  String?
@@ -22,8 +22,8 @@ class AlertVC: UIViewController {
     
     init(alertTitle: String, message: String, buttonTitle: String) {
         super.init(nibName: nil, bundle: nil)
-        self.alertTitle = alertTitle
-        self.message = message
+        self.alertTitle  = alertTitle
+        self.message     = message
         self.buttonTitle = buttonTitle
     }
     
@@ -71,8 +71,8 @@ class AlertVC: UIViewController {
         actionButton.addTarget(self, action: #selector(dismissVC), for: .touchUpInside)
         actionButton.translatesAutoresizingMaskIntoConstraints = false
         actionButton.layer.cornerRadius = 5
-        actionButton.backgroundColor    = UIColor(named: Resources.Colors.blue)
-        actionButton.setTitleColor(UIColor(named: Resources.Colors.black), for: .normal)
+        actionButton.backgroundColor    = Resources.Colors.blue
+        actionButton.setTitleColor(Resources.Colors.black, for: .normal)
         
         NSLayoutConstraint.activate([
             actionButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: paddin),

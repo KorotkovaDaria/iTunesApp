@@ -9,11 +9,11 @@ import UIKit
 
 class MediaItemCollectionViewCell: UICollectionViewCell {
     //MARK: - property
-    static var reuseID = "MediaItemCell"
-    let mainImageView = iTunesImageView(frame: .zero)
-    let kindTypeLabel = iTunesLable(textAlignment: .left, color: Resources.Colors.greyText, numberOfLines: 1)
-    let trackNameLabel = iTunesLable(textAlignment: .left, color: Resources.Colors.seaBlue, numberOfLines: 1)
-    let collectionPriceLabel = iTunesLable(textAlignment: .left, color: Resources.Colors.seaBlue, numberOfLines: 1)
+    static var reuseID       = "MediaItemCell"
+    let mainImageView        = iTunesImageView(frame: .zero)
+    let kindTypeLabel        = iTunesLabel(textAlignment: .left, color: Resources.Colors.greyText, numberOfLines: 1)
+    let trackNameLabel       = iTunesLabel(textAlignment: .left, color: Resources.Colors.seaBlue, numberOfLines: 2)
+    let collectionPriceLabel = iTunesLabel(textAlignment: .left, color: Resources.Colors.seaBlue, numberOfLines: 1)
     //MARK: - init
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -26,20 +26,39 @@ class MediaItemCollectionViewCell: UICollectionViewCell {
     }
     //MARK: - func set
     func set(mediaItem: MediaResult) {
-        kindTypeLabel.text = mediaItem.kind?.uppercased()
-        if kindTypeLabel.text == "feature-movie".uppercased(){
-            kindTypeLabel.text = "movie".uppercased()
-        }
-        trackNameLabel.text = mediaItem.trackName
+        guard let kindText = (mediaItem.kind ?? mediaItem.collectionType)?.uppercased() else { return }
+        let finalKindText = finalKindText(for: kindText)
+        
+        kindTypeLabel.text = finalKindText
+        setTrackName(for: mediaItem, with: finalKindText)
         collectionPriceLabel.text = String(mediaItem.collectionPrice ?? 0.0) + "$"
         if let imageUrl = mediaItem.artworkUrl100 {
-            mainImageView.downloadImage(from: imageUrl)
+            NetworkManager.shared.downloadImage(from: imageUrl) { [weak self] image in
+                guard let self = self else { return }
+                DispatchQueue.main.async { self.mainImageView.image = image }
+            }
         }
+    }
+    
+    private func setTrackName(for mediaItem: MediaResult, with kind: String) {
+        if kind != "ALBUM" {
+            trackNameLabel.text = mediaItem.trackName
+        } else {
+            trackNameLabel.text = mediaItem.collectionName
+        }
+    }
+    
+    private func finalKindText(for kindText: String) -> String {
+        let kindTextMappings: [String: String] = [
+            "FEATURE-MOVIE": "MOVIE"
+        ]
+        
+        return kindTextMappings[kindText] ?? kindText
     }
     //MARK: - configure label
     private func configureLabel() {
-        kindTypeLabel.font = .systemFont(ofSize: 10)
-        trackNameLabel.font = .systemFont(ofSize: 10)
+        kindTypeLabel.font        = .systemFont(ofSize: 10)
+        trackNameLabel.font       = .systemFont(ofSize: 10)
         collectionPriceLabel.font = .systemFont(ofSize: 10)
     }
     //MARK: - configure
@@ -49,7 +68,7 @@ class MediaItemCollectionViewCell: UICollectionViewCell {
         addSubview(trackNameLabel)
         addSubview(collectionPriceLabel)
         
-        let padding: CGFloat = 16
+        let padding: CGFloat      = 16
         let paddingLabel: CGFloat = 4
         
         NSLayoutConstraint.activate([

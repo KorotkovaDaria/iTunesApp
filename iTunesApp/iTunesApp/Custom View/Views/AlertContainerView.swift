@@ -19,10 +19,10 @@ class AlertContainerView: UIView {
     }
     
     private func configure() {
-        backgroundColor = UIColor(named: Resources.Colors.sand)
-        layer.cornerRadius = 16
-        layer.borderWidth = 2
-        layer.borderColor = UIColor.white.cgColor
+        backgroundColor     = Resources.Colors.sand
+        layer.cornerRadius  = 16
+        layer.borderWidth   = 2
+        layer.borderColor   = UIColor.white.cgColor
         translatesAutoresizingMaskIntoConstraints = false
     }
     

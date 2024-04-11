@@ -8,8 +8,9 @@
 import UIKit
 
 class DependencyManager {
+    
     static func createSearchNC() -> UIViewController {
-        let searchVC = SearchViewController()
+        let searchVC   = SearchViewController()
         searchVC.title = "SEARCH"
         return searchVC
     }
@@ -22,11 +23,11 @@ class DependencyManager {
             let navigationBarAppearance = UINavigationBarAppearance()
             navigationBarAppearance.configureWithOpaqueBackground()
             navigationBarAppearance.titleTextAttributes = [
-                NSAttributedString.Key.foregroundColor : UIColor(named: Resources.Colors.seaBlue)!
+                NSAttributedString.Key.foregroundColor : Resources.Colors.seaBlue!
             ]
-            navigationBarAppearance.backgroundColor = UIColor(named: Resources.Colors.blueGrey)
-            UINavigationBar.appearance().standardAppearance = navigationBarAppearance
-            UINavigationBar.appearance().compactAppearance = navigationBarAppearance
+            navigationBarAppearance.backgroundColor           = Resources.Colors.blueGrey
+            UINavigationBar.appearance().standardAppearance   = navigationBarAppearance
+            UINavigationBar.appearance().compactAppearance    = navigationBarAppearance
             UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
             
         }
@@ -42,8 +43,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-               window = UIWindow(frame: windowScene.coordinateSpace.bounds)
-               window?.windowScene = windowScene
+               window                     = UIWindow(frame: windowScene.coordinateSpace.bounds)
+               window?.windowScene        = windowScene
                window?.rootViewController = DependencyManager.createNavController()
                window?.makeKeyAndVisible()
     }

@@ -1,5 +1,5 @@
 //
-//  iTunesLable.swift
+//  iTunesLabel.swift
 //  iTunesApp
 //
 //  Created by Daria on 09.04.2024.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class iTunesLable: UILabel {
+class iTunesLabel: UILabel {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -18,19 +18,17 @@ class iTunesLable: UILabel {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init (textAlignment: NSTextAlignment, color: String, numberOfLines: Int) {
-        super.init(frame: .zero)
+    convenience init (textAlignment: NSTextAlignment, color: UIColor?, numberOfLines: Int) {
+        self.init(frame: .zero)
         self.textAlignment = textAlignment
-        self.textColor     = UIColor(named: color)
+        self.textColor     = color
         self.numberOfLines = numberOfLines
-        configure()
     }
     
     private func configure() {
         adjustsFontSizeToFitWidth = true
         minimumScaleFactor        = 0.75
         lineBreakMode             = .byWordWrapping
-        numberOfLines             = 0
         translatesAutoresizingMaskIntoConstraints = false
     }
 

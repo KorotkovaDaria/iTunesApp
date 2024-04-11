@@ -18,18 +18,17 @@ class iTunesButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(backgroundColor: String, title: String?, titleColor: String) {
-        super.init(frame: .zero)
-        configure()
-        self.backgroundColor  = UIColor(named: backgroundColor)
+    convenience init(backgroundColor: UIColor?, title: String?, titleColor: UIColor?) {
+        self.init(frame: .zero)
+        self.backgroundColor  = backgroundColor
         self.setTitle(title ?? "OK", for: .normal)
-        self.setTitleColor(UIColor(named: titleColor), for: .normal)
+        self.setTitleColor(titleColor, for: .normal)
     }
     
     
     private func configure() {
         titleLabel?.numberOfLines = 0
-        layer.cornerRadius = 5
+        layer.cornerRadius        = 5
         translatesAutoresizingMaskIntoConstraints = false
     }
 

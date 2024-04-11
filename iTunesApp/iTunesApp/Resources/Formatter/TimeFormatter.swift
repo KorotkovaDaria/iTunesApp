@@ -10,9 +10,9 @@ import Foundation
 struct TimeFormatter {
     static func timeFormater(time millis: Int) -> String {
         let milliseconds: Double = Double(millis)
-        let seconds = milliseconds / 1000 
-        let minutes = seconds / 60
-        let hours = minutes / 60
+        let seconds              = milliseconds / 1000 
+        let minutes              = seconds / 60
+        let hours                = minutes / 60
         
         if hours >= 1 {
             let remainingMinutes = Int(minutes) % 60

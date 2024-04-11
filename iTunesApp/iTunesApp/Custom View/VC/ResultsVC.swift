@@ -8,23 +8,26 @@
 import UIKit
 
 class ResultsVC: UIViewController {
-    let tableView = UITableView()
+    let tableView                    = UITableView()
     var previouslyReceived: [String] = []
-    var searchSuggestions: [String] = []
+    var searchSuggestions: [String]  = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
-        view.backgroundColor = UIColor(named: Resources.Colors.blue)
+    }
+    
+    func configureResultsVC() {
+        view.backgroundColor = Resources.Colors.blue
     }
     
     func configureTableView() {
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.backgroundColor = UIColor(named: "blue")
+        tableView.dataSource      = self
+        tableView.delegate        = self
+        tableView.backgroundColor = Resources.Colors.blue
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -45,14 +48,15 @@ extension ResultsVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        let arrowImage = UIImage(systemName: "arrow.up.backward")
-        let arrowImageView = UIImageView(image: arrowImage)
-        arrowImageView.tintColor = UIColor(named: Resources.Colors.blue)
-        cell.selectionStyle = .none
-        cell.textLabel?.text = searchSuggestions[indexPath.row]
-        cell.backgroundColor = UIColor(named: Resources.Colors.seaBlue)
-        cell.accessoryView = arrowImageView
+        let cell                 = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        let arrowImage           = Resources.ImageTitle.arrowUpBackward
+        let arrowImageView       = UIImageView(image: arrowImage)
+        arrowImageView.tintColor = Resources.Colors.blue
+        cell.selectionStyle      = .none
+        cell.textLabel?.text     = searchSuggestions[indexPath.row]
+        cell.backgroundColor     = Resources.Colors.seaBlue
+        cell.accessoryView       = arrowImageView
+        
         return cell
     }
     
