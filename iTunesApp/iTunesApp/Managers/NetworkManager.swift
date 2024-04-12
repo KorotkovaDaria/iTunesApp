@@ -60,7 +60,6 @@ class NetworkManager: NetworkManagerProtocol {
     func getMediaLookupResult(amgArtist id: Int?, completed: @escaping (Result<MediaSearchResult, iTunseError>) -> Void) {
         guard let idAmg = id else { return }
         let endpoint     = "\(baseLookupURL)\(idAmg)"
-        print(endpoint)
         
         guard let url = URL(string: endpoint) else {
             completed(.failure(.invalidURL))
@@ -99,7 +98,7 @@ class NetworkManager: NetworkManagerProtocol {
     
     func downloadImage(from urlString: String, completed: @escaping (UIImage?) -> Void) {
         let cacheKey    = NSString(string: urlString)
-        let hdURLString = urlString.replacingOccurrences(of: "100", with: "1000")
+        let hdURLString = urlString.replacingOccurrences(of: "100", with: "500")
         if let image = cache.object(forKey: cacheKey) {
             completed(image)
             return

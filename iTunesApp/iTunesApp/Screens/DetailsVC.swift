@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 class DetailsVC: UIViewController {
     // MARK: - Properties
     var selectedMediaItem:  MediaResult?
@@ -18,20 +17,37 @@ class DetailsVC: UIViewController {
     let tableView           = ContentSizeTableView()
     var kindType            = ""
     
-    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
+        setupStackView()
+        setupScrollView()
         configureNavButton()
         if let mediaItem = selectedMediaItem {
             configure(with: mediaItem)
             featchMediaItem(id: mediaItem)
         }
     }
-
+    
     // MARK: - UI Setup
-    private func setupUI() {
+    private func setupStackView() {
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.spacing = 8
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -20),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -20),
+            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -40)
+        ])
+    }
+
+    private func setupScrollView() {
         view.backgroundColor = Resources.Colors.blue
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
@@ -43,27 +59,14 @@ class DetailsVC: UIViewController {
             scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
         
-        stackView.axis         = .vertical
-        stackView.alignment    = .fill
-        stackView.distribution = .fill
-        stackView.spacing      = 8
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.addSubview(stackView)
-        
-        NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20),
-            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
-            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -20),
-            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -20),
-            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -40)
-        ])
-        
         scrollView.contentSize = stackView.bounds.size
     }
+
     
     // MARK: - Configuration
     private func configure(with mediaItem: MediaResult) {
         configureMainImage(with: mediaItem)
+        
         configureTitleLabel(with: mediaItem)
         configureArtistLabel(with: mediaItem)
         configureTypeLabel(with: mediaItem)
@@ -72,8 +75,8 @@ class DetailsVC: UIViewController {
         configureCollectionPriceLabel(with: mediaItem)
         configureTrackCountLabel(with: mediaItem)
         
-        configureTrackButton(with: mediaItem)
-        configureArtistButton(with: mediaItem)
+        configureTrackHyperlink(with: mediaItem)
+        configureArtistHyperlink(with: mediaItem)
         
         configureDescriptionTextLabel(with: mediaItem)
         configureDescriptionLabel(with: mediaItem)
@@ -81,27 +84,8 @@ class DetailsVC: UIViewController {
         configureBestAlbumsLabel(with: mediaItem)
         
         table(with: mediaItem)
-        
     }
-    
-    private func table (with mediaItem: MediaResult) {
-        guard let _ = mediaItem.amgArtistId, kindType == Resources.MediaType.album else { return }
-        stackView.addArrangedSubview(tableView)
-        tableView.delegate   = self
-        tableView.dataSource = self
-        tableView.register(BestAlbumCell.self, forCellReuseIdentifier: BestAlbumCell.reuseID)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.rowHeight          = 96
-        tableView.layer.cornerRadius = 10
-        tableView.backgroundColor    = Resources.Colors.seaBlue
-        tableView.layer.borderColor  = Resources.Colors.sand?.cgColor
-        tableView.layer.borderWidth  = 2
-        
-        NSLayoutConstraint.activate([
-            tableView.widthAnchor.constraint(equalTo: stackView.widthAnchor)
-        ])
-    }
-    
+    // MARK: - image
     private func configureMainImage(with mediaItem: MediaResult) {
         guard let imageUrl = mediaItem.artworkUrl100 else { return }
         mainImage = iTunesImageView(frame: .zero)
@@ -109,14 +93,13 @@ class DetailsVC: UIViewController {
             guard let self = self else { return }
             DispatchQueue.main.async { self.mainImage.image = image }
         }
-        mainImage.contentMode = .scaleAspectFit
+        mainImage.contentMode   = .scaleAspectFit
         mainImage.clipsToBounds = true
-        mainImage.translatesAutoresizingMaskIntoConstraints = false
-
+        
         stackView.addArrangedSubview(mainImage)
         mainImage.heightAnchor.constraint(equalToConstant: 400).isActive = true
     }
-    
+    // MARK: - label
     private func configureTitleLabel(with mediaItem: MediaResult) {
         let titleText: String
         if let trackName = mediaItem.trackName ?? mediaItem.collectionName {
@@ -134,11 +117,7 @@ class DetailsVC: UIViewController {
     
     private func configureTypeLabel(with mediaItem: MediaResult) {
         guard let kind = (mediaItem.collectionType ?? mediaItem.kind)?.lowercased() else { return }
-            var updatedKind = ""
-            switch kind {
-            case "feature-movie":  updatedKind = Resources.MediaType.movie
-                default: updatedKind = kind
-            }
+            let updatedKind = kind == "feature-movie" ? Resources.MediaType.movie : kind
             kindType = updatedKind
             configureLabel(title: "Type: \(kindType)", isBold: false)
     }
@@ -158,25 +137,30 @@ class DetailsVC: UIViewController {
         guard let collectionPrice = mediaItem.collectionPrice else { return }
         configureLabel(title: "Collection price: \(collectionPrice)$", isBold: false)
     }
-    
-    private func configureTrackButton(with mediaItem: MediaResult) {
+    // MARK: - Hyperlink
+    private func configureTrackHyperlink(with mediaItem: MediaResult) {
         guard let url = mediaItem.trackViewUrl ?? mediaItem.collectionViewUrl else { return }
-        configureButton(title: "Click to view this \(kindType)", url: url, action: #selector(openTrackURL))
+        configureLink(title: "Click to view this \(kindType)", url: url)
     }
     
-    private func configureArtistButton(with mediaItem: MediaResult) {
+    private func configureArtistHyperlink(with mediaItem: MediaResult) {
+        var url: String?
         switch kindType {
-        case "podcast":
-            configureButton(title: "Click to find out more information", url: mediaItem.artistViewUrl, action: #selector(openArtistPodcastURL))
-        case "movie":
-            configureButton(title: "Click to find out more information", url: mediaItem.collectionArtistViewUrl, action: #selector(openArtistMovieURL))
-        case "album":
-            configureButton(title: "Click to find out more information", url: mediaItem.artistViewUrl, action: #selector(openArtistAlbumURL))
+        case Resources.MediaType.podcast:
+            url = mediaItem.artistViewUrl
+        case Resources.MediaType.movie:
+            url = mediaItem.collectionArtistViewUrl
+        case Resources.MediaType.album:
+            url = mediaItem.artistViewUrl
         default:
             break
         }
+        guard let artistURL = url else { return }
+        configureLink(title: "Click to find out more information about the author", url: artistURL)
     }
-    
+
+
+    // MARK: - label
     private func configureDescriptionTextLabel(with mediaItem: MediaResult) {
         if mediaItem.description == nil && mediaItem.longDescription == nil { return }
         configureLabel(title: "Description", isBold: true)
@@ -192,7 +176,7 @@ class DetailsVC: UIViewController {
     }
     
     private func configureTrackCountLabel(with mediaItem: MediaResult) {
-        guard kindType == Resources.MediaType.podcast, let trackCount = mediaItem.trackCount else { return }
+        guard kindType == Resources.MediaType.podcast || kindType == Resources.MediaType.album, let trackCount = mediaItem.trackCount else { return }
         configureLabel(title: "Track count: \(trackCount)", isBold: false)
     }
     
@@ -200,6 +184,26 @@ class DetailsVC: UIViewController {
         guard let _ = mediaItem.amgArtistId, kindType == Resources.MediaType.album else { return }
         configureLabel(title: "Best albums by \(mediaItem.artistName)", isBold: true)
     }
+    // MARK: - table
+    private func table (with mediaItem: MediaResult) {
+        guard let _ = mediaItem.amgArtistId, kindType == Resources.MediaType.album else { return }
+        stackView.addArrangedSubview(tableView)
+        tableView.delegate   = self
+        tableView.dataSource = self
+        tableView.register(BestAlbumCell.self, forCellReuseIdentifier: BestAlbumCell.reuseID)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.rowHeight          = 96
+        tableView.layer.cornerRadius = 10
+        tableView.backgroundColor    = Resources.Colors.seaBlue
+        tableView.layer.borderColor  = Resources.Colors.sand?.cgColor
+        tableView.layer.borderWidth  = 2
+        
+        NSLayoutConstraint.activate([
+            tableView.widthAnchor.constraint(equalTo: stackView.widthAnchor)
+        ])
+    }
+    
+    //MARK: - Helper
     
     private func configureLabel(title: String?, isBold: Bool = false) {
         guard let title = title else { return }
@@ -208,15 +212,20 @@ class DetailsVC: UIViewController {
         label.font = isBold ? UIFont.boldSystemFont(ofSize: 20) : UIFont.systemFont(ofSize: 17)
         stackView.addArrangedSubview(label)
     }
-
-    private func configureButton(title: String?, url: String?, action: Selector) {
-        guard let title = title, let _ = url else { return }
-        let button = iTunesButton(backgroundColor: Resources.Colors.seaBlue, title: title, titleColor: Resources.Colors.blue)
-        button.addTarget(self, action: action, for: .touchUpInside)
-        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        stackView.addArrangedSubview(button)
-    }
     
+    private func configureLink(title: String, url: String) {
+        let attributedString = NSMutableAttributedString(string: title)
+        let range            = NSRange(location: 0, length: attributedString.length)
+        attributedString.addAttribute(.link, value: url, range: range)
+        
+        let linkLabel            = iTunesLabel()
+        linkLabel.attributedText = attributedString
+        linkLabel.numberOfLines  = 0
+        linkLabel.isUserInteractionEnabled = true
+        linkLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openLink(_:))))
+        stackView.addArrangedSubview(linkLabel)
+    }
+
     // MARK: - Data
     func featchMediaItem(id: MediaResult?) {
         guard let amgArtistId = id?.amgArtistId else { return }
@@ -235,24 +244,15 @@ class DetailsVC: UIViewController {
             }
         }
     }
+    
     // MARK: - Actions
-    @objc private func openTrackURL() {
-        guard let url = selectedMediaItem?.trackViewUrl ?? selectedMediaItem?.collectionViewUrl else { return }
-        presentSafariVC(with: url)
-    }
-    @objc private func openArtistMovieURL() {
-        guard let url = selectedMediaItem?.collectionArtistViewUrl else { return }
-        presentSafariVC(with: url)
-    }
-    @objc private func openArtistPodcastURL() {
-        guard let url = selectedMediaItem?.artistViewUrl else { return }
-        presentSafariVC(with: url)
+    @objc private func openLink(_ sender: UITapGestureRecognizer) {
+        guard let label   = sender.view as? UILabel,
+              let url     = label.attributedText?.attribute(.link, at: 0, effectiveRange: nil) as? String,
+              let linkURL = URL(string: url) else { return }
+        UIApplication.shared.open(linkURL)
     }
     
-    @objc private func openArtistAlbumURL() {
-        guard let url = selectedMediaItem?.artistViewUrl else { return }
-        presentSafariVC(with: url)
-    }
     // MARK: - Navigation Configuration
     private func configureNavButton() {
         let backButton = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissVC))
@@ -265,25 +265,34 @@ class DetailsVC: UIViewController {
     }
 }
 
+//MARK: - Extension
+
 extension DetailsVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let countItem = selectedLookupItem?.count else { return 0 }
-        return countItem - 1
+        guard let countItem = selectedLookupItem?.filter({ $0.artistType != "Artist" }).count else { return 0 }
+        
+        return countItem
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: BestAlbumCell.reuseID, for: indexPath) as! BestAlbumCell
-        let index = indexPath.row + 1
-        let album = selectedLookupItem?[index]
+        let cell  = tableView.dequeueReusableCell(withIdentifier: BestAlbumCell.reuseID, for: indexPath) as! BestAlbumCell
+        let index = indexPath.row
+        guard let album = selectedLookupItem?.filter({ $0.artistType != "Artist" })[index] else {
+            return cell
+        }
+        let arrowImage           = Resources.ImageTitle.arrowUpBackward
+        let arrowImageView       = UIImageView(image: arrowImage)
+        arrowImageView.tintColor = Resources.Colors.blue
         cell.set(mediaItem: album)
         cell.textLabel?.numberOfLines = 0
-        cell.selectionStyle = .none
+        cell.selectionStyle  = .none
         cell.backgroundColor = Resources.Colors.seaBlue
+        cell.accessoryView   = arrowImageView
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let index = indexPath.row + 1
+        let index         = indexPath.row + 1
         let selectedAlbum = selectedLookupItem?[index]
         guard let url = selectedAlbum?.collectionViewUrl else { return }
         presentSafariVC(with: url)

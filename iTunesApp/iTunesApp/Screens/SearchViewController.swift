@@ -105,6 +105,7 @@ extension SearchViewController: UICollectionViewDataSource, UICollectionViewDele
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaItemCollectionViewCell.reuseID, for: indexPath) as! MediaItemCollectionViewCell
+        cell.prepareForReuse()
         let mediaItem = searchResults[indexPath.item]
         cell.set(mediaItem: mediaItem)
         return cell
@@ -114,7 +115,7 @@ extension SearchViewController: UICollectionViewDataSource, UICollectionViewDele
         let selectedMediaItem                = searchResults[indexPath.item]
         let destVC                           = DetailsVC()
         destVC.selectedMediaItem             = selectedMediaItem
-        destVC.title                         = selectedMediaItem.trackName
+        destVC.title                         = selectedMediaItem.trackName ?? selectedMediaItem.collectionName
         let navController                    = UINavigationController(rootViewController: destVC)
         navController.modalPresentationStyle = .fullScreen
         present(navController, animated: true)
@@ -132,9 +133,9 @@ extension SearchViewController: UISearchResultsUpdating, UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let searchText = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines), !searchText.isEmpty {
-            let isEnglish = searchText.range(of: "\\P{Latin}", options: .regularExpression) == nil
+            let isEnglishAndDigits = searchText.range(of: #"^[a-zA-Z0-9 ]+$"#, options: .regularExpression) != nil
             
-            if isEnglish {
+            if isEnglishAndDigits {
                 featchMediaItem(term: searchText)
                 if !previouslyEnteredSearchTerms.contains(where: { $0.lowercased() == searchText.lowercased() }) {
                     previouslyEnteredSearchTerms.insert(searchText, at: 0)

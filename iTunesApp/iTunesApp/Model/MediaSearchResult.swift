@@ -18,6 +18,7 @@ struct MediaResult: Codable, Hashable {
     let kind:                    String?
     
     let artistName:              String
+    let artistType:              String?
     let artistViewUrl:           String?
     let artistId:                Int?
     let amgArtistId:             Int?
