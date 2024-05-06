@@ -12,6 +12,7 @@ class DetailsViewModel {
     var selectedLookupItem: [MediaResult]?
     weak var viewController: UIViewController?
     
+    
     init(selectedMediaItem: MediaResult) {
             self.selectedMediaItem = selectedMediaItem
         }
@@ -24,7 +25,7 @@ class DetailsViewModel {
                 self.selectedLookupItem = mediaLookupItem.results
                 completion(.success(mediaLookupItem.results))
             case .failure(let error):
-                self.viewController?.presentAlertOnMainTread(title: "You wrote something wrong!", message: "Please make sure you make your request in English and write the existing text.\n\(error.rawValue)", buttonTitle: "OK")
+                self.viewController?.presentAlertOnMainTread(title: Resources.AlertText.titleWrongAlert, message: "\(Resources.AlertText.messageEnglishTextAlert)\(error.rawValue)", buttonTitle: Resources.AlertText.okButtonTitleAlert)
             }
         }
     }

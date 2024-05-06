@@ -77,7 +77,7 @@ class SearchViewController: UIViewController, SearchViewModelDelegate {
     }
     
     func displayError(title: String, message: String) {
-        presentAlertOnMainTread(title: title, message: message, buttonTitle: "OK")
+        presentAlertOnMainTread(title: title, message: message, buttonTitle: Resources.AlertText.okButtonTitleAlert)
     }
     
     func configureDataSourse() {
@@ -137,7 +137,7 @@ extension SearchViewController: UISearchResultsUpdating, UISearchBarDelegate {
                 }
                 searchController.dismiss(animated: true)
             } else {
-                presentAlertOnMainTread(title: "Only English Language", message: "Please enter your search term in English.", buttonTitle: "OK")
+                presentAlertOnMainTread(title: Resources.AlertText.titleOnlyEnglishAlert, message: Resources.AlertText.messageEnterOnlyEnglishAlert, buttonTitle: Resources.AlertText.okButtonTitleAlert)
             }
         }
     }

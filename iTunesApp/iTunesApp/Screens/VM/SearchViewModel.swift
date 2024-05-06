@@ -20,6 +20,7 @@ class SearchViewModel {
     var searchResults: [MediaResult] = []
     var previouslyEnteredSearchTerms: [String] = []
     
+    
     func fetchMediaItem(term: String) {
         viewController?.showLoadingView()
         NetworkManager.shared.getMediaSearchResult(term: term) { [weak self] result in
@@ -33,10 +34,10 @@ class SearchViewModel {
                     self.delegate?.updateSearchResults()
                 }
                 if self.searchResults.isEmpty {
-                    self.delegate?.displayError(title: "You are so unique!", message: "Unfortunately, there is nothing matching your request. We will try to take this into account next time")
+                    self.delegate?.displayError(title: Resources.AlertText.titleUniqueAlert, message: Resources.AlertText.messageUnfortunatelyRequestAlert)
                 }
             case .failure(let error):
-                self.delegate?.displayError(title: "You wrote something wrong!", message: "Please make sure you make your request in English and write the existing text.\n\(error.rawValue)")
+                self.delegate?.displayError(title: Resources.AlertText.titleWrongAlert, message: "\(Resources.AlertText.messageEnglishTextAlert)\(error.rawValue)")
             }
         }
     }
