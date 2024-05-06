@@ -8,26 +8,31 @@
 
 import UIKit
 
-class SearchViewController: UIViewController {
+class SearchViewController: UIViewController, SearchViewModelDelegate {
+    
+    
     //MARK: - enum
     enum Section { case main }
     // MARK: - Properties
-    let searchController                       = UISearchController(searchResultsController: ResultsVC())
-    var searchResults: [MediaResult]           = []
-    var previouslyEnteredSearchTerms: [String] = []
+    let searchController = UISearchController(searchResultsController: ResultsVC())
     var collectionView: UICollectionView!
     var dataSourse: UICollectionViewDiffableDataSource<Section, MediaResult>!
+    
+    var viewModel = SearchViewModel()
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.delegate = self
+        
         configureSearchController()
         configureSearchViewController()
         configureCollectionView()
         configureDataSourse()
-        loadSearchTerms()
+        
+        viewModel.loadSearchTerms()
     }
-
+    
     //MARK: - configure search view controller
     func configureSearchViewController() {
         view.backgroundColor = Resources.Colors.blue
@@ -59,26 +64,20 @@ class SearchViewController: UIViewController {
         navigationItem.searchController                       = searchController
         navigationItem.searchController?.searchBar.tintColor  = Resources.Colors.seaBlue
     }
-    //MARK: - data
-    func featchMediaItem(term: String) {
-        showLoadingView()
-        NetworkManager.shared.getMediaSearchResult(term: term) { [weak self] result in
-            self?.dismissLoadingView()
-            guard let self = self else { return }
-            switch result {
-            case .success(let mediaItem):
-                self.searchResults = mediaItem.results
-                self.updateData(on: self.searchResults)
-                DispatchQueue.main.async {
-                    self.collectionView.reloadData()
-                }
-                if self.searchResults.isEmpty {
-                    self.presentAlertOnMainTread(title: "You are so unique!", message: "Unfortunately, there is nothing matching your request. We will try to take this into account next time", buttonTitle: "OK")
-                }
-            case .failure(let error):
-                self.presentAlertOnMainTread(title: "You wrote something wrong!", message: "Please make sure you make your request in English and write the existing text.\n\(error.rawValue)", buttonTitle: "OK")
-            }
-        }
+    
+    func updateData(on mediaItem: [MediaResult]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section,MediaResult>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(mediaItem)
+        DispatchQueue.main.async { self.dataSourse.apply(snapshot, animatingDifferences: true) }
+    }
+    
+    func updateSearchResults() {
+        updateData(on: viewModel.searchResults)
+    }
+    
+    func displayError(title: String, message: String) {
+        presentAlertOnMainTread(title: title, message: message, buttonTitle: "OK")
     }
     
     func configureDataSourse() {
@@ -88,33 +87,25 @@ class SearchViewController: UIViewController {
             return cell
         })
     }
-    
-    func updateData(on mediaItem: [MediaResult]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section,MediaResult>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(mediaItem)
-        DispatchQueue.main.async { self.dataSourse.apply(snapshot, animatingDifferences: true) }
-        
-    }
 }
 //MARK: - extension collection view controller
 extension SearchViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return searchResults.count
+        return viewModel.searchResults.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaItemCollectionViewCell.reuseID, for: indexPath) as! MediaItemCollectionViewCell
         cell.prepareForReuse()
-        let mediaItem = searchResults[indexPath.item]
+        let mediaItem = viewModel.searchResults[indexPath.item]
         cell.set(mediaItem: mediaItem)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let selectedMediaItem                = searchResults[indexPath.item]
+        let selectedMediaItem                = viewModel.searchResults[indexPath.item]
         let destVC                           = DetailsVC()
-        destVC.selectedMediaItem             = selectedMediaItem
+        destVC.viewModel = DetailsViewModel(selectedMediaItem: selectedMediaItem)
         destVC.title                         = selectedMediaItem.trackName ?? selectedMediaItem.collectionName
         let navController                    = UINavigationController(rootViewController: destVC)
         navController.modalPresentationStyle = .fullScreen
@@ -126,7 +117,7 @@ extension SearchViewController: UISearchResultsUpdating, UISearchBarDelegate {
     
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text else { return }
-        let filteredTerms = previouslyEnteredSearchTerms.filter { $0.lowercased().contains(searchText.lowercased()) }
+        let filteredTerms = viewModel.previouslyEnteredSearchTerms.filter { $0.lowercased().contains(searchText.lowercased()) }
         (searchController.searchResultsController as? ResultsVC)?.searchSuggestions = filteredTerms
         (searchController.searchResultsController as? ResultsVC)?.tableView.reloadData()
     }
@@ -136,13 +127,13 @@ extension SearchViewController: UISearchResultsUpdating, UISearchBarDelegate {
             let isEnglishAndDigits = searchText.range(of: #"^[a-zA-Z0-9 ]+$"#, options: .regularExpression) != nil
             
             if isEnglishAndDigits {
-                featchMediaItem(term: searchText)
-                if !previouslyEnteredSearchTerms.contains(where: { $0.lowercased() == searchText.lowercased() }) {
-                    previouslyEnteredSearchTerms.insert(searchText, at: 0)
-                    if previouslyEnteredSearchTerms.count > 5 {
-                        previouslyEnteredSearchTerms.removeLast()
+                viewModel.fetchMediaItem(term: searchText)
+                if !viewModel.previouslyEnteredSearchTerms.contains(where: { $0.lowercased() == searchText.lowercased() }) {
+                    viewModel.previouslyEnteredSearchTerms.insert(searchText, at: 0)
+                    if viewModel.previouslyEnteredSearchTerms.count > 5 {
+                        viewModel.previouslyEnteredSearchTerms.removeLast()
                     }
-                    saveSearchTerms()
+                    viewModel.saveSearchTerms()
                 }
                 searchController.dismiss(animated: true)
             } else {
@@ -152,17 +143,7 @@ extension SearchViewController: UISearchResultsUpdating, UISearchBarDelegate {
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchResults.removeAll()
+        viewModel.searchResults.removeAll()
         updateData(on: [])
-    }
-}
-
-extension SearchViewController {
-    func saveSearchTerms() {
-        UserDefaultsManager.shared.saveSearchTerms(previouslyEnteredSearchTerms)
-    }
-    
-    func loadSearchTerms() {
-        previouslyEnteredSearchTerms = UserDefaultsManager.shared.loadSearchTerms()
     }
 }

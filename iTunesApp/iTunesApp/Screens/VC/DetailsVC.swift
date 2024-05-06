@@ -9,13 +9,13 @@ import UIKit
 
 class DetailsVC: UIViewController {
     // MARK: - Properties
-    var selectedMediaItem:  MediaResult?
-    var selectedLookupItem: [MediaResult]?
-    var mainImage:          iTunesImageView!
-    let scrollView          = UIScrollView()
-    let stackView           = UIStackView()
-    let tableView           = ContentSizeTableView()
-    var kindType            = ""
+    var viewModel: DetailsViewModel?
+    var mainImage: iTunesImageView!
+    let scrollView = UIScrollView()
+    let stackView  = UIStackView()
+    let tableView  = ContentSizeTableView()
+    var kindType   = ""
+    
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -23,9 +23,13 @@ class DetailsVC: UIViewController {
         setupStackView()
         setupScrollView()
         configureNavButton()
-        if let mediaItem = selectedMediaItem {
+        if let mediaItem = viewModel?.selectedMediaItem {
             configure(with: mediaItem)
-            featchMediaItem(id: mediaItem)
+            viewModel?.fetchMediaItem(id: mediaItem) { _ in
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
         }
     }
     
@@ -46,7 +50,7 @@ class DetailsVC: UIViewController {
             stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -40)
         ])
     }
-
+    
     private func setupScrollView() {
         view.backgroundColor = Resources.Colors.blue
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -61,7 +65,7 @@ class DetailsVC: UIViewController {
         
         scrollView.contentSize = stackView.bounds.size
     }
-
+    
     
     // MARK: - Configuration
     private func configure(with mediaItem: MediaResult) {
@@ -117,9 +121,9 @@ class DetailsVC: UIViewController {
     
     private func configureTypeLabel(with mediaItem: MediaResult) {
         guard let kind = (mediaItem.collectionType ?? mediaItem.kind)?.lowercased() else { return }
-            let updatedKind = kind == "feature-movie" ? Resources.MediaType.movie : kind
-            kindType = updatedKind
-            configureLabel(title: "Type: \(kindType)", isBold: false)
+        let updatedKind = kind == "feature-movie" ? Resources.MediaType.movie : kind
+        kindType = updatedKind
+        configureLabel(title: "Type: \(kindType)", isBold: false)
     }
     
     private func configureDateLabel(with mediaItem: MediaResult) {
@@ -158,8 +162,8 @@ class DetailsVC: UIViewController {
         guard let artistURL = url else { return }
         configureLink(title: "Click to find out more information about the author", url: artistURL)
     }
-
-
+    
+    
     // MARK: - label
     private func configureDescriptionTextLabel(with mediaItem: MediaResult) {
         if mediaItem.description == nil && mediaItem.longDescription == nil { return }
@@ -225,25 +229,6 @@ class DetailsVC: UIViewController {
         linkLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openLink(_:))))
         stackView.addArrangedSubview(linkLabel)
     }
-
-    // MARK: - Data
-    func featchMediaItem(id: MediaResult?) {
-        guard let amgArtistId = id?.amgArtistId else { return }
-        showLoadingView()
-        NetworkManager.shared.getMediaLookupResult(amgArtist: amgArtistId) { [weak self] result in
-            self?.dismissLoadingView()
-            guard let self = self else { return }
-            switch result {
-            case .success(let mediaLookupItem):
-                self.selectedLookupItem = mediaLookupItem.results
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            case .failure(let error):
-                self.presentAlertOnMainTread(title: "You wrote something wrong!", message: "Please make sure you make your request in English and write the existing text.\n\(error.rawValue)", buttonTitle: "OK")
-            }
-        }
-    }
     
     // MARK: - Actions
     @objc private func openLink(_ sender: UITapGestureRecognizer) {
@@ -264,12 +249,11 @@ class DetailsVC: UIViewController {
         dismiss(animated: true)
     }
 }
-
 //MARK: - Extension
 
 extension DetailsVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let countItem = selectedLookupItem?.filter({ $0.artistType != "Artist" }).count else { return 0 }
+        guard let countItem = viewModel?.selectedLookupItem?.filter({ $0.artistType != "Artist" }).count else { return 0 }
         
         return countItem
     }
@@ -277,7 +261,7 @@ extension DetailsVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell  = tableView.dequeueReusableCell(withIdentifier: BestAlbumCell.reuseID, for: indexPath) as! BestAlbumCell
         let index = indexPath.row
-        guard let album = selectedLookupItem?.filter({ $0.artistType != "Artist" })[index] else {
+        guard let album = viewModel?.selectedLookupItem?.filter({ $0.artistType != "Artist" })[index] else {
             return cell
         }
         let arrowImage           = Resources.ImageTitle.arrowUpBackward
@@ -293,7 +277,7 @@ extension DetailsVC: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index         = indexPath.row + 1
-        let selectedAlbum = selectedLookupItem?[index]
+        let selectedAlbum = viewModel?.selectedLookupItem?[index]
         guard let url = selectedAlbum?.collectionViewUrl else { return }
         presentSafariVC(with: url)
     }

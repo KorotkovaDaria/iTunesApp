@@ -64,7 +64,7 @@ extension ResultsVC: UITableViewDelegate, UITableViewDataSource {
         let selectedSuggestion = searchSuggestions[indexPath.row]
         if let searchVC = presentingViewController as? SearchViewController {
             searchVC.searchController.searchBar.text = selectedSuggestion
-            searchVC.featchMediaItem(term: selectedSuggestion)
+            searchVC.viewModel.fetchMediaItem(term: selectedSuggestion)
         }
         dismiss(animated: true, completion: nil)
     }

@@ -10,6 +10,8 @@
 		4E0454162BC3CDA40055E962 /* ViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0454152BC3CDA40055E962 /* ViewController+Ext.swift */; };
 		4E0454182BC3D5D10055E962 /* AlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0454172BC3D5D10055E962 /* AlertVC.swift */; };
 		4E04541A2BC3D6460055E962 /* AlertContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0454192BC3D6460055E962 /* AlertContainerView.swift */; };
+		4E1487742BE8DA19000059E2 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1487732BE8DA19000059E2 /* SearchViewModel.swift */; };
+		4E1487782BE8E41B000059E2 /* DetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1487772BE8E41B000059E2 /* DetailsViewModel.swift */; };
 		4E2F8BA22BC6734E001C01C6 /* Date + Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2F8BA12BC6734E001C01C6 /* Date + Ext.swift */; };
 		4E3488402BC322A60062A9DA /* DetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E34883F2BC322A60062A9DA /* DetailsVC.swift */; };
 		4E8876802BC5208100A068FE /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E88767F2BC5208100A068FE /* UserDefaultsManager.swift */; };
@@ -37,6 +39,8 @@
 		4E0454152BC3CDA40055E962 /* ViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Ext.swift"; sourceTree = "<group>"; };
 		4E0454172BC3D5D10055E962 /* AlertVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertVC.swift; sourceTree = "<group>"; };
 		4E0454192BC3D6460055E962 /* AlertContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertContainerView.swift; sourceTree = "<group>"; };
+		4E1487732BE8DA19000059E2 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		4E1487772BE8E41B000059E2 /* DetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewModel.swift; sourceTree = "<group>"; };
 		4E2F8BA12BC6734E001C01C6 /* Date + Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date + Ext.swift"; sourceTree = "<group>"; };
 		4E34883F2BC322A60062A9DA /* DetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsVC.swift; sourceTree = "<group>"; };
 		4E88767F2BC5208100A068FE /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
@@ -76,8 +80,8 @@
 		4E04541D2BC3DD6E0055E962 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
-				4ED460192BC27C3700A07ECD /* SearchViewController.swift */,
-				4E34883F2BC322A60062A9DA /* DetailsVC.swift */,
+				4E1487752BE8E3DD000059E2 /* VC */,
+				4E1487762BE8E3E7000059E2 /* VM */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -128,6 +132,24 @@
 				4E0454192BC3D6460055E962 /* AlertContainerView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		4E1487752BE8E3DD000059E2 /* VC */ = {
+			isa = PBXGroup;
+			children = (
+				4ED460192BC27C3700A07ECD /* SearchViewController.swift */,
+				4E34883F2BC322A60062A9DA /* DetailsVC.swift */,
+			);
+			path = VC;
+			sourceTree = "<group>";
+		};
+		4E1487762BE8E3E7000059E2 /* VM */ = {
+			isa = PBXGroup;
+			children = (
+				4E1487732BE8DA19000059E2 /* SearchViewModel.swift */,
+				4E1487772BE8E41B000059E2 /* DetailsViewModel.swift */,
+			);
+			path = VM;
 			sourceTree = "<group>";
 		};
 		4E8876832BC5225600A068FE /* Label */ = {
@@ -322,9 +344,11 @@
 				4E8876802BC5208100A068FE /* UserDefaultsManager.swift in Sources */,
 				4ED460242BC2A70800A07ECD /* NetworkManager.swift in Sources */,
 				4E8876882BC526D800A068FE /* iTunesButton.swift in Sources */,
+				4E1487782BE8E41B000059E2 /* DetailsViewModel.swift in Sources */,
 				4ED460062BC2785900A07ECD /* SceneDelegate.swift in Sources */,
 				4ED460282BC2C33A00A07ECD /* iTunesImageView.swift in Sources */,
 				4E88768F2BC5573F00A068FE /* TimeFormatter.swift in Sources */,
+				4E1487742BE8DA19000059E2 /* SearchViewModel.swift in Sources */,
 				4E8ACA1C2BC8248600430D8F /* BestAlbumCell.swift in Sources */,
 				4ED460212BC2A6B900A07ECD /* iTunseError.swift in Sources */,
 				4E8876822BC5212900A068FE /* UIHelper.swift in Sources */,
